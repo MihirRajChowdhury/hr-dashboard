@@ -1,10 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FaStar, FaRegStar, FaBookmark, FaRegBookmark, FaEye, FaArrowTrendUp } from 'react-icons/fa6';
+import { FaStar, FaRegStar, FaBookmark, FaRegBookmark, FaEye, FaArrowTrendUp, FaArrowUp } from 'react-icons/fa6';
 import { useBookmarks } from '@/context/BookmarksContext';
 
-export default function UserCard({ user }) {
+export default function UserCard({ user, onPromote }) {
   const [rating, setRating] = useState(0);
   const { toggle, bookmarks } = useBookmarks();
 
@@ -22,6 +22,15 @@ export default function UserCard({ user }) {
     if (rating >= 4) return 'bg-emerald-50 dark:bg-emerald-900/20';
     if (rating >= 3) return 'bg-amber-50 dark:bg-amber-900/20';
     return 'bg-red-50 dark:bg-red-900/20';
+  };
+
+  const handlePromote = () => {
+    if (onPromote) {
+      onPromote(user);
+    } else {
+      // Fallback UI action if no onPromote prop provided
+      alert(`Promoting ${user.firstName} ${user.lastName}!`);
+    }
   };
 
   return (
@@ -84,19 +93,19 @@ export default function UserCard({ user }) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <Link
             href={`/employee/${user.id}`}
-            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transform hover:-translate-y-0.5"
+            className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transform hover:-translate-y-0.5"
           >
             <FaEye className="w-4 h-4" />
-            View Profile
+            <span className="hidden sm:inline">View</span>
           </Link>
           
           <button
             onClick={() => toggle(user)}
             className={`
-              inline-flex items-center justify-center gap-2 px-4 py-2.5 font-medium rounded-lg transition-all duration-200 transform hover:-translate-y-0.5 shadow-lg
+              inline-flex items-center justify-center gap-2 px-3 py-2.5 font-medium rounded-lg transition-all duration-200 transform hover:-translate-y-0.5 shadow-lg
               ${saved
                 ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white shadow-emerald-500/25 hover:shadow-emerald-500/40'
                 : 'bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 dark:from-slate-700 dark:to-slate-600 dark:hover:from-slate-600 dark:hover:to-slate-500 dark:text-gray-200 shadow-gray-500/25 dark:shadow-slate-500/25'
@@ -106,14 +115,22 @@ export default function UserCard({ user }) {
             {saved ? (
               <>
                 <FaBookmark className="w-4 h-4" />
-                Saved
+                <span className="hidden sm:inline">Saved</span>
               </>
             ) : (
               <>
                 <FaRegBookmark className="w-4 h-4" />
-                Save
+                <span className="hidden sm:inline">Save</span>
               </>
             )}
+          </button>
+
+          <button
+            onClick={handlePromote}
+            className="inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transform hover:-translate-y-0.5"
+          >
+            <FaArrowUp className="w-4 h-4" />
+            <span className="hidden sm:inline">Promote</span>
           </button>
         </div>
       </div>
