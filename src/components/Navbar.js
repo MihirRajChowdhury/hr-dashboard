@@ -3,6 +3,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import useDarkMode from '@/hooks/useDarkMode';
+import CreateUserForm from '@/components/CreateUserForm';
+
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -10,6 +12,8 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+      const [open, setOpen] = useState(false);
+
 
   return (
     <nav className="bg-gradient-to-r from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
@@ -59,14 +63,22 @@ export default function Navbar() {
               Analytics
             </Link>
 
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-200"
-            >
-              {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-            </button>
-          </div>
+      {/* Theme Toggle Button */}
+      <button
+        onClick={toggleTheme}
+        className="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-200"
+      >
+        {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+      </button>
+      {/* Add Employee Button */}
+      <button 
+        onClick={() => setOpen(true)}
+        className="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-200"
+      >
+        ➕ Add Employee
+      </button>
+      <CreateUserForm open={open} onClose={() => setOpen(false)} />
+    </div>
 
           {/* Mobile Hamburger Menu */}
           <div className="md:hidden flex items-center space-x-4">

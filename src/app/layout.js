@@ -1,18 +1,24 @@
-import './globals.css';   // must stay here
+import './globals.css';
+import ProvidersClient from '@/components/ProvidersClient';
 
-import { BookmarksProvider } from '@/context/BookmarksContext';
-import Navbar from '@/components/Navbar';
+//  ─────────────────────────────────────────────────────
+//  Server component: fetch users once, before first paint
+//  ─────────────────────────────────────────────────────
+export default async function RootLayout({ children }) {
+  // Server‑side fetch; no hooks here
+  const res  = await fetch('https://dummyjson.com/users?limit=20', {
+    cache: 'no-store',   // disable cache during dev; remove in prod if desired
+  });
+  const data = await res.json();
+  const initialUsers = data.users || [];
 
-export const metadata = { title: 'HR Dashboard' };
-
-export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
-        <BookmarksProvider>
-          <Navbar />
+      <body className="bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100">
+        {/* All client‑side providers & Navbar now live inside this wrapper */}
+        <ProvidersClient initial={initialUsers}>
           {children}
-        </BookmarksProvider>
+        </ProvidersClient>
       </body>
     </html>
   );

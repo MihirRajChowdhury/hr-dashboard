@@ -12,19 +12,16 @@ const SearchFilterBar = ({ users, onFilter }) => {
   const deptDropdownRef = useRef(null);
   const ratingDropdownRef = useRef(null);
 
-  /* unique departments from user data */
   const departments = useMemo(() => {
     const unique = [...new Set(users.map(u => u.company?.department).filter(Boolean))];
     return unique.sort();
   }, [users]);
 
-  /* deterministic “rating” based on id (same as before) */
   const generateRating = (id = 0) =>
     Math.floor(((id * 9301 + 49297) % 233280) / 233280 * 5) + 1;
 
   const ratings = [1, 2, 3, 4, 5];
 
-  /* close dropdowns when clicking outside */
   useEffect(() => {
     const handleClick = (e) => {
       if (deptDropdownRef.current && !deptDropdownRef.current.contains(e.target))
@@ -36,12 +33,11 @@ const SearchFilterBar = ({ users, onFilter }) => {
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  /* filter logic */
   useEffect(() => {
     const filtered = users.filter(user => {
       const name = `${user.firstName} ${user.lastName}`.toLowerCase();
       const email = user.email.toLowerCase();
-      const dept  = user.company?.department?.toLowerCase() || '';
+      const dept = user.company?.department?.toLowerCase() || '';
       const rating = generateRating(user.id);
 
       const matchesSearch =
@@ -62,9 +58,11 @@ const SearchFilterBar = ({ users, onFilter }) => {
     onFilter(filtered);
   }, [searchTerm, selectedDepts, selectedRatings, users, onFilter]);
 
-  /* toggle helpers */
-  const toggleDept   = (d) => setSelectedDepts(p => p.includes(d) ? p.filter(x => x !== d) : [...p, d]);
-  const toggleRating = (r) => setSelectedRatings(p => p.includes(r) ? p.filter(x => x !== r) : [...p, r]);
+  const toggleDept = (d) =>
+    setSelectedDepts((p) => (p.includes(d) ? p.filter((x) => x !== d) : [...p, d]));
+
+  const toggleRating = (r) =>
+    setSelectedRatings((p) => (p.includes(r) ? p.filter((x) => x !== r) : [...p, r]));
 
   const clearFilters = () => {
     setSearchTerm('');
@@ -74,16 +72,14 @@ const SearchFilterBar = ({ users, onFilter }) => {
     setShowRatingDropdown(false);
   };
 
-  const hasActiveFilters =
-    searchTerm || selectedDepts.length || selectedRatings.length;
+  const hasActiveFilters = searchTerm || selectedDepts.length || selectedRatings.length;
 
-  /* ────────────────────────────────────────────────────────── */
   return (
     <div className="mb-6 bg-white dark:bg-slate-800 shadow-lg rounded-lg border border-gray-200 dark:border-slate-700">
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-600 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-700 dark:to-slate-800">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-          Search & Filter Users
+          Search & Filter Users
         </h3>
         <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
           Find users by name, email, department, or rating
@@ -121,7 +117,6 @@ const SearchFilterBar = ({ users, onFilter }) => {
                   : 'bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700'
               }`}
             >
-              {/* icon */}
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/>
               </svg>
@@ -140,13 +135,10 @@ const SearchFilterBar = ({ users, onFilter }) => {
               <div className="absolute top-full left-0 mt-1 w-64 max-h-60 overflow-y-auto bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg z-10">
                 <div className="p-2">
                   <p className="text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-2 px-2">
-                    Select Departments ({departments.length})
+                    {departments.length > 0
+                      ? `Select Departments (${departments.length})`
+                      : 'No Departments Available'}
                   </p>
-                  {departments.length === 0 && (
-                    <p className="px-2 py-2 text-sm text-gray-500 dark:text-gray-400">
-                      No departments available
-                    </p>
-                  )}
                   {departments.map((dept) => (
                     <label key={dept} className="flex items-center gap-2 px-2 py-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700">
                       <input
@@ -173,7 +165,6 @@ const SearchFilterBar = ({ users, onFilter }) => {
                   : 'bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700'
               }`}
             >
-              {/* icon */}
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927l1.519 4.674a1 1 0 00.95.69h4.915l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888 1.518-4.674a1 1 0 00-.363-1.118L4.567 8.291h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
               </svg>
@@ -215,7 +206,7 @@ const SearchFilterBar = ({ users, onFilter }) => {
             )}
           </div>
 
-          {/* clear filters */}
+          {/* Clear Filters */}
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
@@ -229,7 +220,7 @@ const SearchFilterBar = ({ users, onFilter }) => {
           )}
         </div>
 
-        {/* active filters chips */}
+        {/* Active Filters */}
         {hasActiveFilters && (
           <div className="mt-4 p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
             <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
@@ -238,7 +229,7 @@ const SearchFilterBar = ({ users, onFilter }) => {
             <div className="flex flex-wrap gap-2">
               {searchTerm && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
-                  Search: “{searchTerm}”
+                  Search: "{searchTerm}"
                   <button onClick={() => setSearchTerm('')} className="hover:text-blue-600 dark:hover:text-blue-400">
                     <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>

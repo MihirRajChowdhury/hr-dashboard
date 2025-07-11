@@ -3,9 +3,14 @@ import useFetchUsers from '@/hooks/useFetchUsers';
 import UserCard from '@/components/UserCard';
 import SearchFilterBar from '@/components/SearchFilterBar';
 import { useState, useEffect, useCallback } from 'react';
+import { useUsers } from '@/context/UsersContext';
 
 export default function Home() {
-  const { users, loading } = useFetchUsers();
+  // const { users, loading } = useFetchUsers();
+  // const { users} = useUsers();
+  // const { loading } = useFetchUsers();
+  const { users = [] } = useUsers() || {};
+  const loading = users.length === 0;  // simple derived flag
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   // Initialize filteredUsers when users data is loaded
@@ -25,9 +30,6 @@ export default function Home() {
   useEffect(() => {
     console.log('Users loaded:', users.length);
     console.log('Filtered users:', filteredUsers.length);
-    if (users.length > 0) {
-      console.log('Sample user:', users[0]);
-    }
   }, [users, filteredUsers]);
 
   return (
