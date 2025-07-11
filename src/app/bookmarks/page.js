@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useBookmarks } from '@/context/BookmarksContext';
 import UserCard from '@/components/UserCard';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function BookmarksPage() {
   const { bookmarks, removeBookmark } = useBookmarks();
@@ -51,7 +52,6 @@ export default function BookmarksPage() {
 
   const handlePromoteSubmit = (e) => {
     e.preventDefault();
-    // UI action - just show success message
     alert(`${selectedUser.name} has been promoted from ${promotionData.currentPosition} to ${promotionData.newPosition}!`);
     setShowPromoteModal(false);
     setSelectedUser(null);
@@ -59,7 +59,6 @@ export default function BookmarksPage() {
 
   const handleAssignSubmit = (e) => {
     e.preventDefault();
-    // UI action - just show success message
     alert(`${selectedUser.name} has been assigned to ${assignmentData.projectName} as ${assignmentData.role}!`);
     setShowAssignModal(false);
     setSelectedUser(null);
@@ -87,30 +86,50 @@ export default function BookmarksPage() {
               {bookmarks.length} bookmarked employee{bookmarks.length !== 1 ? 's' : ''}
             </p>
           </div>
-          
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {bookmarks.map((user) => (
-              <div key={user.id} className="relative">
-                <UserCard user={user} />
 
-                {/* Management actions */}
-                <div className="mt-4 flex gap-2">
-                  <button
-                    onClick={() => handlePromote(user)}
-                    className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors font-medium"
-                  >
-                    Add Promotion Details
-                  </button>
-                  <button
-                    onClick={() => handleAssignToProject(user)}
-                    className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors font-medium"
-                  >
-                    Assign to Project
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.1
+                }
+              }
+            }}
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            <AnimatePresence>
+              {bookmarks.map((user) => (
+                <motion.div
+                  key={user.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="relative"
+                >
+                  <UserCard user={user} />
+
+                  <div className="mt-4 flex gap-2">
+                    <button
+                      onClick={() => handlePromote(user)}
+                      className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors font-medium"
+                    >
+                      Add Promotion Details
+                    </button>
+                    <button
+                      onClick={() => handleAssignToProject(user)}
+                      className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                    >
+                      Assign to Project
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </>
       )}
 
@@ -126,12 +145,12 @@ export default function BookmarksPage() {
                 </label>
                 <input
                   type="text"
-                  value={selectedUser?.firstName +" " + selectedUser?.lastName || ''}
+                  value={selectedUser?.firstName + " " + selectedUser?.lastName || ''}
                   disabled
                   className="w-full p-2 border border-gray-300 rounded-lg bg-gray-50"
                 />
               </div>
-              
+
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Current Position
@@ -139,7 +158,7 @@ export default function BookmarksPage() {
                 <input
                   type="text"
                   value={promotionData.currentPosition}
-                  onChange={(e) => setPromotionData({...promotionData, currentPosition: e.target.value})}
+                  onChange={(e) => setPromotionData({ ...promotionData, currentPosition: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   placeholder="Current position"
                 />
@@ -152,7 +171,7 @@ export default function BookmarksPage() {
                 <input
                   type="text"
                   value={promotionData.newPosition}
-                  onChange={(e) => setPromotionData({...promotionData, newPosition: e.target.value})}
+                  onChange={(e) => setPromotionData({ ...promotionData, newPosition: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   placeholder="New position"
                   required
@@ -166,7 +185,7 @@ export default function BookmarksPage() {
                 <input
                   type="text"
                   value={promotionData.department}
-                  onChange={(e) => setPromotionData({...promotionData, department: e.target.value})}
+                  onChange={(e) => setPromotionData({ ...promotionData, department: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   placeholder="Department"
                 />
@@ -179,7 +198,7 @@ export default function BookmarksPage() {
                 <input
                   type="date"
                   value={promotionData.effectiveDate}
-                  onChange={(e) => setPromotionData({...promotionData, effectiveDate: e.target.value})}
+                  onChange={(e) => setPromotionData({ ...promotionData, effectiveDate: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   required
                 />
@@ -217,12 +236,12 @@ export default function BookmarksPage() {
                 </label>
                 <input
                   type="text"
-                  value={selectedUser?.firstName +" " + selectedUser?.lastName || ''}
+                  value={selectedUser?.firstName + " " + selectedUser?.lastName || ''}
                   disabled
                   className="w-full p-2 border border-gray-300 rounded-lg bg-gray-50"
                 />
               </div>
-              
+
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Project Name *
@@ -230,7 +249,7 @@ export default function BookmarksPage() {
                 <input
                   type="text"
                   value={assignmentData.projectName}
-                  onChange={(e) => setAssignmentData({...assignmentData, projectName: e.target.value})}
+                  onChange={(e) => setAssignmentData({ ...assignmentData, projectName: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   placeholder="Project name"
                   required
@@ -244,7 +263,7 @@ export default function BookmarksPage() {
                 <input
                   type="text"
                   value={assignmentData.role}
-                  onChange={(e) => setAssignmentData({...assignmentData, role: e.target.value})}
+                  onChange={(e) => setAssignmentData({ ...assignmentData, role: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   placeholder="Role in project"
                   required
@@ -258,7 +277,7 @@ export default function BookmarksPage() {
                 <input
                   type="date"
                   value={assignmentData.startDate}
-                  onChange={(e) => setAssignmentData({...assignmentData, startDate: e.target.value})}
+                  onChange={(e) => setAssignmentData({ ...assignmentData, startDate: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   required
                 />
@@ -271,7 +290,7 @@ export default function BookmarksPage() {
                 <input
                   type="text"
                   value={assignmentData.duration}
-                  onChange={(e) => setAssignmentData({...assignmentData, duration: e.target.value})}
+                  onChange={(e) => setAssignmentData({ ...assignmentData, duration: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   placeholder="e.g., 6 months, 1 year"
                 />
@@ -283,7 +302,7 @@ export default function BookmarksPage() {
                 </label>
                 <select
                   value={assignmentData.priority}
-                  onChange={(e) => setAssignmentData({...assignmentData, priority: e.target.value})}
+                  onChange={(e) => setAssignmentData({ ...assignmentData, priority: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                 >
                   <option value="low">Low</option>

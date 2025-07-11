@@ -72,7 +72,7 @@ const SearchFilterBar = ({ users, onFilter }) => {
     setShowRatingDropdown(false);
   };
 
-  const hasActiveFilters = searchTerm || selectedDepts.length || selectedRatings.length;
+  const hasActiveFilters = !!(searchTerm || selectedDepts.length || selectedRatings.length);
 
   return (
     <div className="mb-6 bg-white dark:bg-slate-800 shadow-lg rounded-lg border border-gray-200 dark:border-slate-700">
@@ -112,7 +112,7 @@ const SearchFilterBar = ({ users, onFilter }) => {
             <button
               onClick={() => setShowDeptDropdown(!showDeptDropdown)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-                selectedDepts.length
+                selectedDepts.length > 0
                   ? 'bg-blue-100 border-blue-300 text-blue-700 dark:bg-blue-900 dark:border-blue-600 dark:text-blue-200'
                   : 'bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700'
               }`}
@@ -121,17 +121,17 @@ const SearchFilterBar = ({ users, onFilter }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/>
               </svg>
               Department
-              {selectedDepts.length > 0 && (
+              {selectedDepts.length > 0 ? (
                 <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
                   {selectedDepts.length}
                 </span>
-              )}
+              ) : null}
               <svg className={`h-4 w-4 transform transition-transform ${showDeptDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
 
-            {showDeptDropdown && (
+            {showDeptDropdown ? (
               <div className="absolute top-full left-0 mt-1 w-64 max-h-60 overflow-y-auto bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg z-10">
                 <div className="p-2">
                   <p className="text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-2 px-2">
@@ -152,7 +152,7 @@ const SearchFilterBar = ({ users, onFilter }) => {
                   ))}
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
 
           {/* Rating filter */}
@@ -160,7 +160,7 @@ const SearchFilterBar = ({ users, onFilter }) => {
             <button
               onClick={() => setShowRatingDropdown(!showRatingDropdown)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-                selectedRatings.length
+                selectedRatings.length > 0
                   ? 'bg-green-100 border-green-300 text-green-700 dark:bg-green-900 dark:border-green-600 dark:text-green-200'
                   : 'bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700'
               }`}
@@ -169,17 +169,17 @@ const SearchFilterBar = ({ users, onFilter }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927l1.519 4.674a1 1 0 00.95.69h4.915l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888 1.518-4.674a1 1 0 00-.363-1.118L4.567 8.291h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
               </svg>
               Rating
-              {selectedRatings.length > 0 && (
+              {selectedRatings.length > 0 ? (
                 <span className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full">
                   {selectedRatings.length}
                 </span>
-              )}
+              ) : null}
               <svg className={`h-4 w-4 transform transition-transform ${showRatingDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
 
-            {showRatingDropdown && (
+            {showRatingDropdown ? (
               <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg z-10">
                 <div className="p-2">
                   <p className="text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-2 px-2">
@@ -203,11 +203,11 @@ const SearchFilterBar = ({ users, onFilter }) => {
                   ))}
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
 
           {/* Clear Filters */}
-          {hasActiveFilters && (
+          {hasActiveFilters ? (
             <button
               onClick={clearFilters}
               className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900 rounded-lg transition-colors"
@@ -217,17 +217,17 @@ const SearchFilterBar = ({ users, onFilter }) => {
               </svg>
               Clear Filters
             </button>
-          )}
+          ) : null}
         </div>
 
         {/* Active Filters */}
-        {hasActiveFilters && (
+        {hasActiveFilters ? (
           <div className="mt-4 p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
             <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               Active Filters:
             </p>
             <div className="flex flex-wrap gap-2">
-              {searchTerm && (
+              {searchTerm ? (
                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">
                   Search: "{searchTerm}"
                   <button onClick={() => setSearchTerm('')} className="hover:text-blue-600 dark:hover:text-blue-400">
@@ -236,7 +236,7 @@ const SearchFilterBar = ({ users, onFilter }) => {
                     </svg>
                   </button>
                 </span>
-              )}
+              ) : null}
               {selectedDepts.map((dept) => (
                 <span key={dept} className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs rounded-full">
                   {dept}
@@ -259,7 +259,7 @@ const SearchFilterBar = ({ users, onFilter }) => {
               ))}
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

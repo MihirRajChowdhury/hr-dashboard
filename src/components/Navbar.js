@@ -62,6 +62,17 @@ export default function Navbar() {
             >
               Analytics
             </Link>
+                    <Link
+        href="/feedback"
+        className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+            pathname === '/feedback'
+            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-700'
+        }`}
+        >
+        Feedback
+        </Link>
+
 
       {/* Theme Toggle Button */}
       <button
