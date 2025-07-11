@@ -9,3 +9,5 @@ export const theme = {
     extend: {},
 };
 export const plugins = [];
+export const darkMode = 'class'; // Enable dark mode support
+

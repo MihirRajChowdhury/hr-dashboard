@@ -1,9 +1,11 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import useDarkMode from '@/hooks/useDarkMode';
 
 export default function Navbar() {
   const pathname = usePathname();
+    const [theme, toggleTheme] = useDarkMode();
 
   return (
     <nav className="bg-gradient-to-r from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
@@ -16,6 +18,12 @@ export default function Navbar() {
           >
             HR Dashboard
           </Link>
+           <button
+        onClick={toggleTheme}
+        className="border px-3 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+      >
+        {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+      </button>
           
           {/* Navigation Links */}
           <div className="flex items-center space-x-1">
@@ -38,6 +46,16 @@ export default function Navbar() {
               }`}
             >
               Bookmarks
+            </Link>
+            <Link 
+              href="/analytics" 
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                pathname === '/analytics' 
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-700'
+              }`}
+            >
+              Analytics
             </Link>
           </div>
         </div>
