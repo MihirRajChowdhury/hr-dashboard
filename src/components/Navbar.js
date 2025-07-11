@@ -4,16 +4,24 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import useDarkMode from '@/hooks/useDarkMode';
 import CreateUserForm from '@/components/CreateUserForm';
-
+import UserMenu from '@/components/UserMenu';
 
 export default function Navbar() {
   const pathname = usePathname();
   const [theme, toggleTheme] = useDarkMode();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
-      const [open, setOpen] = useState(false);
 
+  // Hide navbar on auth pages
+  const authPages = ['/login', '/auth/signin', '/auth/signup', '/register'];
+  const shouldHideNavbar = authPages.includes(pathname);
+
+  // Don't render navbar on auth pages
+  if (shouldHideNavbar) {
+    return null;
+  }
 
   return (
     <nav className="bg-gradient-to-r from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
@@ -62,34 +70,36 @@ export default function Navbar() {
             >
               Analytics
             </Link>
-                    <Link
-        href="/feedback"
-        className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-            pathname === '/feedback'
-            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-700'
-        }`}
-        >
-        Feedback
-        </Link>
+            <Link
+              href="/feedback"
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                pathname === '/feedback'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-700'
+              }`}
+            >
+              Feedback
+            </Link>
 
-
-      {/* Theme Toggle Button */}
-      <button
-        onClick={toggleTheme}
-        className="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-200"
-      >
-        {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-      </button>
-      {/* Add Employee Button */}
-      <button 
-        onClick={() => setOpen(true)}
-        className="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-200"
-      >
-        ➕ Add Employee
-      </button>
-      <CreateUserForm open={open} onClose={() => setOpen(false)} />
-    </div>
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-200"
+            >
+              {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+            </button>
+            
+            {/* Add Employee Button */}
+            <button 
+              onClick={() => setOpen(true)}
+              className="border border-slate-300 dark:border-slate-600 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-200"
+            >
+              ➕ Add Employee
+            </button>
+            
+            <CreateUserForm open={open} onClose={() => setOpen(false)} />
+            <UserMenu />
+          </div>
 
           {/* Mobile Hamburger Menu */}
           <div className="md:hidden flex items-center space-x-4">
@@ -119,8 +129,8 @@ export default function Navbar() {
 
         {/* Mobile Nav Menu */}
         <div className={`md:hidden mt-4 space-y-2 ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
-          {['/', '/bookmarks', '/analytics'].map((path, i) => {
-            const label = ['Home', 'Bookmarks', 'Analytics'][i];
+          {['/', '/bookmarks', '/analytics', '/feedback'].map((path, i) => {
+            const label = ['Home', 'Bookmarks', 'Analytics', 'Feedback'][i];
             const isActive = pathname === path;
             return (
               <Link
@@ -137,6 +147,17 @@ export default function Navbar() {
               </Link>
             );
           })}
+          
+          {/* Mobile Add Employee Button */}
+          <button 
+            onClick={() => {
+              setOpen(true);
+              setIsMobileMenuOpen(false);
+            }}
+            className="block w-full text-center px-4 py-2 rounded-lg font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-700 transition-all duration-200"
+          >
+            ➕ Add Employee
+          </button>
         </div>
       </div>
     </nav>
