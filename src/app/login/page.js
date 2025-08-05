@@ -3,9 +3,9 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 
 export default function LoginPage() {
-  const [email, setEmail]       = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError]       = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,6 +40,12 @@ export default function LoginPage() {
         <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition">
           Sign In
         </button>
+
+        <div className="text-sm text-center text-gray-600 dark:text-gray-400 mt-4">
+          <p>Demo Credentials:</p>
+          <p><strong>Email:</strong> admin@demo.com</p>
+          <p><strong>Password:</strong> password123</p>
+        </div>
       </form>
     </main>
   );
