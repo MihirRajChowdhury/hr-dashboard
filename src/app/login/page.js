@@ -42,7 +42,7 @@ export default function LoginPage() {
         </button>
 
         <div className="text-sm text-center text-gray-600 dark:text-gray-400 mt-4">
-          <p>Demo Credentials:</p>
+          <p>Use These Credentials:</p>
           <p><strong>Email:</strong> admin@demo.com</p>
           <p><strong>Password:</strong> password123</p>
         </div>
